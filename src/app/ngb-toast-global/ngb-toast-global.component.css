@@ -1,0 +1,7 @@
+.ngb-toasts {
+    position: absolute;
+    bottom: 0px;
+    right: 0;
+    margin: .5em;
+    z-index: 1200;
+}

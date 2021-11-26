@@ -1,0 +1,261 @@
+
+<table class="table table-striped table-responsive ">
+    <thead>
+        <tr>
+        <th scope="col">Serial</th>
+        <th scope="col" sortable="titulo" (sort)="onSort($event)" dirr>Título</th>
+        <th scope="col" sortable="isbn" (sort)="onSort($event)">ISBN</th>
+        <th scope="col" sortable="numPaginas" (sort)="onSort($event)">Numero de páginas</th>
+        <th scope="col" sortable="autor" (sort)="onSort($event)">Autor</th>
+        <th scope="col" sortable="editorial" (sort)="onSort($event)">Editorial</th>
+        <th scope="col" sortable="categoria" (sort)="onSort($event)">Categoría</th>
+        <th>
+          
+        </th>
+        </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let libro of libros">
+      <th scope="row">{{ libro.serial }}</th>
+      <td>{{ libro.titulo }}</td>
+      <td>{{ libro.isbn}}</td>
+      <td>{{ libro.numPaginas | number }}</td>
+      <td>{{ libro.autor }}</td>
+      <td>{{ libro.editorial }}</td>
+      <td>{{ libro.categoria }}</td>
+      <td>
+        <svg (click)="openModal(edit,libro)" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="blue" class="bi bi-pencil-square" viewBox="0 0 16 16">
+          <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+          <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+        </svg>
+        &nbsp;
+        <svg (click)="openModal(remove,libro)" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="red" class="bi bi-trash-fill" viewBox="0 0 16 16">
+          <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+        </svg>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <ng-template  #edit let-modal>
+    <div class="modal-header rounded">
+      <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="blue" class="bi bi-pencil-square" viewBox="0 0 16 16">
+        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+        <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+      </svg>
+      &nbsp;
+      <h4 class="modal-title" id="modal-edit-book">{{selectedLibro?.titulo}}</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="editForm">
+        <div class="form-group">
+          <label for="serialEdit">Serial</label>
+          <input type="text" formControlName="serial" class="form-control" id="serialEdit" name="serialEdit" aria-describedby="serialEdit">
+        </div>
+        <div class="form-group">
+          <label for="tituloEdit">Título</label>
+          <input type="text" formControlName="titulo" class="form-control" id="tituloEdit" name="tituloEdit" aria-describedby="tituloEdit"
+            [ngClass]="{ 'is-invalid': f.titulo.errors }"
+          >
+          <div *ngIf="f.titulo.errors" class="invalid-feedback">
+            <strong *ngIf="f.titulo.errors.required">Título requerido</strong>
+            <strong *ngIf="f.titulo.errors.minlength">El título debe tener 3 o más caracteres</strong>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="autorEdit">Autor</label>
+          <input type="text" formControlName="autor" class="form-control" id="autorEdit" name="autorEdit" aria-describedby="autorEdit"
+          [ngClass]="{ 'is-invalid': f.autor.errors }">
+          <div *ngIf="f.autor.errors" class="invalid-feedback">
+            <strong *ngIf="f.autor.errors.required">Autor requerido</strong>
+            <strong *ngIf="f.autor.errors.minlength">El Autor debe tener 3 o más caracteres</strong>
+          </div>
+        </div>
+
+        <div class="row">
+          
+          <div class="col">
+            <div class="form-group">
+              <label for="editorialEdit">Editorial</label>
+              <input type="text" class="form-control" formControlName="editorial" id="editorialEdit" name="editorialEdit" aria-describedby="editorialEdit" 
+              [ngClass]="{ 'is-invalid': f.editorial.errors }">
+              <div *ngIf="f.editorial.errors" class="invalid-feedback">
+                <strong *ngIf="f.editorial.errors.required">Editorial requerida</strong>
+                <strong *ngIf="f.editorial.errors.minlength">La editorial debe tener 3 o más caracteres</strong>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label for="categoriaEdit">Categoría</label>
+              <input type="text" class="form-control" formControlName="categoria" id="categoriaEdit" name="categoriaEdit" aria-describedby="categoriaEdit"
+              [ngClass]="{ 'is-invalid': f.categoria.errors }" >
+              <div *ngIf="f.categoria.errors" class="invalid-feedback">
+                <strong *ngIf="f.categoria.errors.required">Categoría requerida</strong>
+                <strong *ngIf="f.categoria.errors.minlength">La categoría debe tener 3 o más caracteres</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          
+          <div class="col">
+            <div class="form-group">
+              <label for="isbnEdit">ISBN</label>
+              <input type="text" class="form-control" formControlName="isbn" id="isbnEdit" name="isbnEdit" aria-describedby="isbnEdit"
+              [ngClass]="{ 'is-invalid': f.isbn.errors }"  >
+              <div *ngIf="f.isbn.errors" class="invalid-feedback">
+                <strong *ngIf="f.isbn.errors.required">ISBN requerido</strong>
+                <strong *ngIf="f.isbn.errors.minlength">El ISBN debe tener 3 o más caracteres</strong>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label for="numPaginasEdit">Numero de páginas</label>
+              <input type="number" step="10" class="form-control" formControlName="numPaginas" id="numPaginasEdit" name="numPaginasEdit" aria-describedby="numPaginasEdit"
+              [ngClass]="{ 'is-invalid': f.numPaginas.errors }"   >
+              <div *ngIf="f.numPaginas.errors" class="invalid-feedback">
+                <strong *ngIf="f.numPaginas.errors.required">Numero de páginas requerido</strong>
+                <strong *ngIf="f.numPaginas.errors.min">El numero de páginas tiene que ser mayor a 5</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-secondary" (click)="modal.close('Save click')" ngbAutofocus>Cancelar</button>
+      <button type="submit" class="btn btn-outline-success" (click)="onUpdate()" [disabled]="c.invalid">Guardar</button>
+    </div>
+  </ng-template>
+  <ng-template #remove let-modal>
+    <div class="modal-header">
+      <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="red" class="bi bi-trash-fill" viewBox="0 0 16 16">
+        <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+      </svg>
+      &nbsp;
+      <h4 class="modal-title" id="modal-basic-title">{{selectedLibro?.titulo}}</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form>
+        <div class="form-group">
+          ¿Esta seguro de eliminar el libro?
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-secondary" (click)="modal.close('Save click')" ngbAutofocus>Cancelar</button>
+      <button type="button" class="btn btn-outline-warning" (click)="onDelete()" >Eliminar</button>
+    </div>
+  </ng-template>
+  <ng-template  #new let-modal>
+    <div class="modal-header rounded">
+      <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="#50A" class="bi bi-journal-plus" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M8 5.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 .5-.5z"/>
+        <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2z"/>
+        <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z"/>
+      </svg>
+      &nbsp;
+      <h4 class="modal-title" id="modal-edit-book">Nuevo libro</h4>
+      <button type="button" class="close" aria-label="Close" (click)="onCreateClose()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="newForm">
+        <div class="form-group">
+          <label for="tituloEdit">Título</label>
+          <input type="text" formControlName="titulo" class="form-control" id="tituloEdit" name="tituloEdit" aria-describedby="tituloEdit"
+            [ngClass]="{ 'is-invalid': fn.titulo.errors && submit }"
+          >
+          <div *ngIf="fn.titulo.errors && submit" class="invalid-feedback">
+            <strong *ngIf="fn.titulo.errors.required">Título requerido</strong>
+            <strong *ngIf="fn.titulo.errors.minlength">El título debe tener 3 o más caracteres</strong>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="autorEdit">Autor</label>
+          <input type="text" formControlName="autor" class="form-control" id="autorEdit" name="autorEdit" aria-describedby="autorEdit"
+          [ngClass]="{ 'is-invalid': fn.autor.errors && submit }">
+          <div *ngIf="fn.autor.errors && submit" class="invalid-feedback">
+            <strong *ngIf="fn.autor.errors.required">Autor requerido</strong>
+            <strong *ngIf="fn.autor.errors.minlength">El autor debe tener 3 o más caracteres</strong>
+          </div>
+        </div>
+        <div class="row">
+          
+          <div class="col">
+            <div class="form-group">
+              <label for="editorialEdit">Editorial</label>
+              <input type="text" class="form-control" formControlName="editorial" id="editorialEdit" name="editorialEdit" aria-describedby="editorialEdit" 
+              [ngClass]="{ 'is-invalid': fn.editorial.errors && submit}">
+              <div *ngIf="fn.editorial.errors && submit" class="invalid-feedback">
+                <strong *ngIf="fn.editorial.errors.required">Editorial requerida</strong>
+                <strong *ngIf="fn.editorial.errors.minlength">La editorial debe tener 3 o más caracteres</strong>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label for="categoriaEdit">Categoría</label>
+              <input type="text" class="form-control" formControlName="categoria" id="categoriaEdit" name="categoriaEdit" aria-describedby="categoriaEdit"
+              [ngClass]="{ 'is-invalid': fn.categoria.errors && submit}" >
+              <div *ngIf="fn.categoria.errors && submit" class="invalid-feedback">
+                <strong *ngIf="fn.categoria.errors.required">Categoría requerida</strong>
+                <strong *ngIf="fn.categoria.errors.minlength">La categoría debe tener 3 o más caracteres</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          
+          <div class="col">
+            <div class="form-group">
+              <label for="isbnEdit">ISBN</label>
+              <input type="text" class="form-control" formControlName="isbn" id="isbnEdit" name="isbnEdit" aria-describedby="isbnEdit"
+              [ngClass]="{ 'is-invalid': fn.isbn.errors && submit}"  >
+              <div *ngIf="fn.isbn.errors && submit" class="invalid-feedback">
+                <strong *ngIf="fn.isbn.errors.required">ISBN requerido</strong>
+                <strong *ngIf="fn.isbn.errors.minlength">El ISBN debe tener 3 o más caracteres</strong>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-group">
+              <label for="numPaginasEdit">Numero de páginas</label>
+              <input type="number" step="10" class="form-control" formControlName="numPaginas" id="numPaginasEdit" name="numPaginasEdit" aria-describedby="numPaginasEdit"
+              [ngClass]="{ 'is-invalid': fn.numPaginas.errors && submit }"   >
+              <div *ngIf="fn.numPaginas.errors && submit" class="invalid-feedback">
+                <strong *ngIf="fn.numPaginas.errors.required">Numero de páginas requerido</strong>
+                <strong *ngIf="fn.numPaginas.errors.min">El numero de páginas tiene que ser mayor a 5</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-secondary" (click)="onCreateClose()" ngbAutofocus>Cancelar</button>
+      <button type="submit" class="btn btn-outline-success" (click)="onCreate()" >Guardar</button>
+    </div>
+  </ng-template>
+  <button (click)="openModalNew(new)" type="button" style="background-color: #50A; position: fixed; bottom: 0; right: 0; margin:0.5em;" class="btn btn-secondary btn-circle">
+    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-journal-plus" viewBox="0 0 16 16">
+      <path fill-rule="evenodd" d="M8 5.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 .5-.5z"/>
+      <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2z"/>
+      <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z"/>
+    </svg>
+  </button>
+
+ 
