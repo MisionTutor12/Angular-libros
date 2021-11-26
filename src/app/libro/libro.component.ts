@@ -48,6 +48,9 @@ export class NgbdSortableHeader {
 })
 export class LibroComponent implements OnInit {
   libros: Libro[] = [];
+  pagina: Libro[] = [];
+  paginas: number[] = [];
+  numPagina: number = 1;
   selectedLibro?: Libro;
   editForm: any;
   newForm: any;
@@ -56,7 +59,9 @@ export class LibroComponent implements OnInit {
   constructor(public toastService: ToastService,private libroService: LibrosService,private modalService: NgbModal, private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
+    
     this.getLibros()
+    
     this.editForm = this.formBuilder.group({
       serial:new FormControl({disabled: true}),
       titulo: new FormControl('',[Validators.required,Validators.minLength(3)]),
@@ -83,7 +88,15 @@ export class LibroComponent implements OnInit {
   get cn() { return this.newForm; }
   getLibros(): void {
     this.libroService.getLibros()
-    .subscribe(libros => (this.libros = libros))
+    .subscribe(libros => {
+      this.libros = libros;
+      this.pagina = libros.slice(0,5);
+      
+      for (let index = 0; index < Math.ceil(libros.length/5); index++) {
+        this.paginas.push(index+1)
+      }
+      
+    })
   }
 
   
@@ -194,6 +207,10 @@ export class LibroComponent implements OnInit {
     this.submit = false;
     this.newForm.reset()
     this.modalService.dismissAll();
+  }
+
+  cambiarPagina(pg:number){
+    this.pagina = this.libros.slice((pg-1)*5,pg*5)
   }
 
   

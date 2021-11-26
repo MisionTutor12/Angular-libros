@@ -15,7 +15,7 @@
         </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let libro of libros">
+    <tr *ngFor="let libro of pagina">
       <th scope="row">{{ libro.serial }}</th>
       <td>{{ libro.titulo }}</td>
       <td>{{ libro.isbn}}</td>
@@ -35,6 +35,11 @@
       </td>
     </tr>
     </tbody>
+    <tfoot>
+      <div *ngFor="let pg of paginas">
+        <button class="btn btn-primary" (click)="cambiarPagina(pg)">{{pg}}</button>
+      </div>
+    </tfoot>
   </table>
 
   <ng-template  #edit let-modal>
