@@ -17,7 +17,7 @@ const httpOptions = {
 
 @Injectable()
 export class LibrosService {
-  LibroesUrl = 'http://127.0.0.1:5000/app';  // URL to web api
+  LibroesUrl = 'https://ciclo4-2021-libros.herokuapp.com/app';  // URL to web api
   private handleError: HandleError;
 
   constructor(
