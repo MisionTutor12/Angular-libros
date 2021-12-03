@@ -87,7 +87,7 @@ export class LibroComponent implements OnInit {
     this.libroService.getLibros()
     .subscribe(libros => {
       this.libros = libros;
-      
+      this.libroService.ejemploSet(libros);
     })
   }
 

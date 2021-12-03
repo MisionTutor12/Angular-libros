@@ -26,6 +26,16 @@ export class LibrosService {
     this.handleError = httpErrorHandler.createHandleError('LibrosService');
   }
 
+  ejemploSet(libros: Libro[]){
+    window.localStorage.setItem('libros', JSON.stringify(libros));
+  }
+  ejemploGet(): Libro[] {
+    const libros = window.localStorage.getItem('libros');
+    // return libros ? JSON.parse(libros) : [];
+    if(libros) {return JSON.parse(libros);}
+    else{return [];}
+  }
+
   /** GET Libroes from the server */
   getLibros(): Observable<Libro[]> {
     return this.http.get<Libro[]>(`${this.LibroesUrl}/libros`)
